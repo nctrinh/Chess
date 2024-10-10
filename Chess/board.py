@@ -30,26 +30,18 @@ class Board:
         self.add_Piece('White')
         self.add_Piece('Black')
 
-    def move_Piece(self, piece, move, bool = True):
+    def move_Piece(self, piece, move):
         final_move_col_idx, final_move_row_idx= move[1].col_idx, move[1].row_idx
         inital_move_col_idx, initial_move_row_idx = move[0].col_idx, move[0].row_idx       
         self.board[initial_move_row_idx][inital_move_col_idx].piece = None  
         self.board[final_move_row_idx][final_move_col_idx].piece = piece 
-        self.board[final_move_row_idx][final_move_col_idx].piece.is_Moved = True
-        self.board[final_move_row_idx][final_move_col_idx].piece.moves = []
+        piece.is_Moved = True
+        piece.moves = []
         self.last_Move = move
-        if bool:
-            if isinstance(piece, Pawn):
-                if (piece.color == 'White' and final_move_row_idx == 0) or (piece.color == 'Black' and final_move_row_idx == 7):
-                    piece_Name = str(input("Input: "))
-                    if piece_Name == "Queen":
-                        self.board[final_move_row_idx][final_move_col_idx].piece = Queen(piece.color)
-                    elif piece_Name == "Rook":
-                        self.board[final_move_row_idx][final_move_col_idx].piece = Rook(piece.color)
-                    elif piece_Name == "Bishop":
-                        self.board[final_move_row_idx][final_move_col_idx].piece = Bishop(piece.color)
-                    elif piece_Name == "Knight":
-                        self.board[final_move_row_idx][final_move_col_idx].piece = Knight(piece.color)
+        if isinstance(piece, Pawn):
+            if (piece.color == 'White' and final_move_row_idx == 0) or (piece.color == 'Black' and final_move_row_idx == 7):
+                self.board[final_move_row_idx][final_move_col_idx].piece = Queen(piece.color)
+    
         if isinstance(piece, King):
             if inital_move_col_idx + 2 == final_move_col_idx:
                 initial_rook_Move = Square(initial_move_row_idx, inital_move_col_idx + 3)
@@ -70,10 +62,26 @@ class Board:
                 self.board[final_move_row_idx][final_move_col_idx].piece.is_Moved = True
                 self.board[final_move_row_idx][final_move_col_idx].piece.moves = []
 
+    def evaluate(self):
+        value = 0
+        for row in range(ROWS):
+            for col in range(COLS):
+                if self.board[row][col].piece != None:
+                    if self.board[row][col].piece.color == "White":
+                        value += piece_square_tables[self.board[row][col].piece.name][row][col]
+                    else:
+                        value -= piece_square_tables[self.board[row][col].piece.name][7 - row][col]
+                    value += self.board[row][col].piece.value
+                    if self.board[row][col].piece.name != 'queen': value += 0.01 * len(self.board[row][col].piece.moves)
+                    else: value += 0.003 * len(self.board[row][col].piece.moves)
+                    value += self.get_threatened_pieces(self.board[row][col].piece, row, col)
+        value = round(value, 5)          
+        return value
+
     def check_Checkmate(self, piece, move):
         tmp_Piece = copy.deepcopy(piece)
         tmp_Board = copy.deepcopy(self)
-        tmp_Board.move_Piece(tmp_Piece, move, False)
+        tmp_Board.move_Piece(tmp_Piece, move)
         for row in range(ROWS):
             for col in range(COLS):
                 if tmp_Board.board[row][col].has_Enemy(piece.color):
@@ -94,6 +102,16 @@ class Board:
                         if isinstance(m[1].piece, King):
                             return True
         return False
+    
+    def get_threatened_pieces(self, piece, row, col):
+        # tmp_Board = copy.deepcopy(self)
+        # tmp_Board.calc_moves(piece, row, col, False)
+        value = 0
+        for move in piece.moves:
+            if move[1].has_Enemy(piece.color):
+                value += move[1].piece.value
+        return value
+
     def has_valid_move(self, turn):
         tmp_Board = copy.deepcopy(self)
         valid_move = []
@@ -157,14 +175,14 @@ class Board:
                     piece.add_Move(move)
         def Knight_move():
             possible_moves = [
+                (row - 2, col + 1),
+                (row - 1, col + 2),
+                (row + 1, col + 2),
                 (row + 2, col + 1),
                 (row + 2, col - 1),
-                (row - 2, col + 1),
-                (row - 2, col - 1),
-                (row + 1, col + 2),
                 (row + 1, col - 2),
-                (row - 1, col + 2),
                 (row - 1, col - 2),
+                (row - 2, col - 1),
             ]
             initial_move = Square(row, col)
             for possible_move in possible_moves:
@@ -386,3 +404,66 @@ class Board:
         self.board[row_Other][3] = Square(row_Pawn, 3, Queen(color))
         # Set pos of Kings
         self.board[row_Other][4] = Square(row_Pawn, 4, King(color))
+
+piece_square_tables = {
+    "Pawn": [
+        [10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00],
+        [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10],
+        [0.07, 0.07, 0.08, 0.09, 0.09, 0.08, 0.07, 0.07],
+        [0.03, 0.03, 0.05, 0.08, 0.08, 0.05, 0.03, 0.03],
+        [0.02, 0.02, 0.04, 0.07, 0.07, 0.04, 0.02, 0.02],
+        [0.01, 0.01, 0.03, 0.06, 0.06, 0.03, 0.01, 0.01],
+        [0.02, 0.01, 0.00, 0.00, 0.00, 0.00, 0.01, 0.02],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+    ],
+    "Knight": [
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.00, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.00],
+        [0.00, 0.02, 0.06, 0.05, 0.05, 0.06, 0.02, 0.00],
+        [0.00, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.00],
+        [0.00, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.00],
+        [0.00, 0.02, 0.06, 0.05, 0.05, 0.06, 0.02, 0.00],
+        [0.00, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+    ],
+    "Bishop": [
+        [0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02],
+        [0.01, 0.05, 0.03, 0.03, 0.03, 0.03, 0.05, 0.01],
+        [0.01, 0.03, 0.07, 0.05, 0.05, 0.07, 0.03, 0.01],
+        [0.01, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.01],
+        [0.01, 0.03, 0.05, 0.10, 0.10, 0.05, 0.03, 0.01],
+        [0.01, 0.03, 0.07, 0.05, 0.05, 0.07, 0.03, 0.01],
+        [0.01, 0.05, 0.03, 0.03, 0.03, 0.03, 0.05, 0.01],
+        [0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02],
+    ],
+    "Rook": [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.05],
+        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
+        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
+        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
+        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
+        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
+        [0, 0, 0, 0.05, 0, 0.05, 0, 0]
+    ],
+    "Queen": [
+        [0.2, 0.1, 0.1, 0.05, 0.05, 0.1, 0.1, 0.2],
+        [0.1, 0, 0, 0, 0, 0, 0, 0.1],
+        [0.1, 0, 0.05, 0.05, 0.05, 0.05, 0, 0.1],
+        [0.05, 0, 0.05, 0.05, 0.05, 0.05, 0, 0.05],
+        [0, 0, 0.05, 0.05, 0.05, 0.05, 0, 0.05],
+        [0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0.1],
+        [0.1, 0, 0.05, 0, 0, 0, 0, 0.1],
+        [0.1, 0.1, 0.1, 0.05, 0.05, 0.1, 0.1, 0.1]
+    ],
+    "King": [
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+        [0.02, 0.02, 0.00, 0.00, 0.00, 0.00, 0.02, 0.02],
+        [0.05, 0.05, 0.10, 0.00, 0.00, 0.00, 0.10, 0.05],
+    ]
+}

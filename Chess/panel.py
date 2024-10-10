@@ -1,3 +1,4 @@
+import time
 import pygame
 import sys
 
@@ -5,6 +6,7 @@ from constaints import *
 from UI import UI
 from board import *
 from click import Click
+from AI import *
 
 # Icon image
 icon_Image = pygame.image.load(r'D:\projects\INT3401\Chess\Image\icon.jpg')
@@ -18,6 +20,8 @@ class Panel:
         self.game_Board = Board()
         self.click = Click()
         self.UI = UI(self.game_Board, self.click)
+        self.AI = AI(3, "Black")
+        self.game_Mode = 'PvA'
         self.choose_Piece = False
         self.choosen_Piece = None
         self.turn = "White"
@@ -38,9 +42,11 @@ class Panel:
             elif not self.game_Board.check_Checkmate_Now(self.turn):
                 self.state = 'Draw'               
                 print("Draw")
+                break
             else:
                 self.state = 'End'
-                print(f'{self.turn} lose')   
+                print(f'{self.turn} lose')
+                break 
             if self.state == 'Playing':                   
                 for event in pygame.event.get():                   
                     # Click
@@ -64,13 +70,26 @@ class Panel:
                                 initial_move, final_move = move[0], move[1]              
                                 if row_idx == final_move.row_idx and col_idx == final_move.col_idx:
                                     self.game_Board.move_Piece(selected_Piece, move)
+                                    print(self.game_Board.evaluate())
                                     self.turn = 'White' if self.turn == 'Black' else 'Black'
                                     selected_Piece = None
-                                    possible_Moves = []
+                                    possible_Moves = []                                    
+                                    if self.game_Mode == "PvA":
+                                        self.UI.show_Board(self.screen)           
+                                        self.UI.show_Pieces(self.screen)   
+                                        pygame.display.update()                             
+                                        move = self.AI.eval(self.game_Board)
+                                        initail_move, final_move = move[0], move[1]
+                                        piece = self.game_Board.board[initail_move.row_idx][initail_move.col_idx].piece
+                                        self.game_Board.move_Piece(piece, move)
+                                        print(self.game_Board.evaluate())
+                                        self.turn = 'White' if self.turn == 'Black' else 'Black'
                                     break 
-                            selected_Piece = None                                          
+                            selected_Piece = None
+                            
+                            
                     elif event.type == pygame.MOUSEBUTTONUP:
-                        last_Piece = chosen_Piece
+                        pass
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
