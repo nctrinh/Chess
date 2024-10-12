@@ -24,11 +24,11 @@ class Knight(Piece):
 
 class Bishop(Piece):
     def __init__(self, color : str):
-        super().__init__('Bishop', color, 3)
+        super().__init__('Bishop', color, 4)
 
 class Rook(Piece):
     def __init__(self, color : str):
-        super().__init__('Rook', color, 3)
+        super().__init__('Rook', color, 5)
 
 class Queen(Piece):
     def __init__(self, color : str):
@@ -36,4 +36,4 @@ class Queen(Piece):
 
 class King(Piece):
     def __init__(self, color : str):
-        super().__init__('King', color, 9999)
+        super().__init__('King', color, 10000)

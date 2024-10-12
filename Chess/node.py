@@ -3,15 +3,17 @@ from board import *
 
 class Node:
 
-    def __init__(self, turn, board : Board) -> None:
-        self.board = board
-        self.value = board.evaluate(turn)
-        self.prob = 0
+    def __init__(self, move = None, value = 0, prob = 0) -> None:   
+        self.move = move
+        self.value = value 
         self.children = []
     
     def add_Child(self, child):
         self.children.append(child)
-
+        self.calc_prob()
+    def add_Children(self, *nodes):
+        for node in nodes:
+            self.add_Child(node)
     def calc_prob(self):
         total_value = 0
         for child in self.children:

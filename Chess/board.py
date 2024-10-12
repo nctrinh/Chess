@@ -25,7 +25,7 @@ class Square:
 class Board:
     def __init__(self):
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0] for row in range(ROWS)]
-        self.last_Move = ()
+        self.last_Move = None
         self.create_Board()
         self.add_Piece('White')
         self.add_Piece('Black')
@@ -91,6 +91,7 @@ class Board:
                         if isinstance(m[1].piece, King):
                             return True
         return False
+    
     def check_Checkmate_Now(self, turn):
         tmp_Board = copy.deepcopy(self)
         for row in range(ROWS):
@@ -104,12 +105,13 @@ class Board:
         return False
     
     def get_threatened_pieces(self, piece, row, col):
-        # tmp_Board = copy.deepcopy(self)
-        # tmp_Board.calc_moves(piece, row, col, False)
         value = 0
         for move in piece.moves:
             if move[1].has_Enemy(piece.color):
-                value += move[1].piece.value
+                if move[1].piece.name == 'king':
+                        eval += move[1].piece.value / 10500
+                else:
+                    value += move[1].piece.value / 45
         return value
 
     def has_valid_move(self, turn):
@@ -133,6 +135,15 @@ class Board:
                 return False
         return True  
 
+    def check_State(self, panel, turn):
+        if self.has_valid_move(turn):         
+            panel.state = 'Playing'
+        elif not self.check_Checkmate_Now(turn):
+            panel.state = 'Draw'               
+            print("Draw")
+        else:
+            panel.state = 'End'
+            print(f'{turn} lose')
     def calc_moves(self, piece, row : int, col : int, bool = True):
         piece.moves = []
         def can_castling(king, rook, row, king_col, rook_col):
@@ -437,24 +448,24 @@ piece_square_tables = {
         [0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.02],
     ],
     "Rook": [
-        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
         [0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.05],
-        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
-        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
-        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
-        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
-        [0.05, 0, 0, 0, 0, 0, 0, 0.05],
-        [0, 0, 0, 0.05, 0, 0.05, 0, 0]
+        [0.05, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.05],
+        [0.05, 0.00, 0.00, 0.05, 0.05, 0.00, 0.00, 0.05],
+        [0.05, 0.00, 0.00, 0.05, 0.05, 0.00, 0.00, 0.05],
+        [0.05, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.05],
+        [0.05, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.05],
+        [0.00, 0.00, 0.00, 0.1, 0.00, 0.1, 0.00, 0.00]
     ],
     "Queen": [
-        [0.2, 0.1, 0.1, 0.05, 0.05, 0.1, 0.1, 0.2],
-        [0.1, 0, 0, 0, 0, 0, 0, 0.1],
-        [0.1, 0, 0.05, 0.05, 0.05, 0.05, 0, 0.1],
-        [0.05, 0, 0.05, 0.05, 0.05, 0.05, 0, 0.05],
-        [0, 0, 0.05, 0.05, 0.05, 0.05, 0, 0.05],
-        [0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0.1],
-        [0.1, 0, 0.05, 0, 0, 0, 0, 0.1],
-        [0.1, 0.1, 0.1, 0.05, 0.05, 0.1, 0.1, 0.1]
+        [0.20, 0.10, 0.10, 0.05, 0.05, 0.10, 0.10, 0.20],
+        [0.10, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.10],
+        [0.10, 0.00, 0.05, 0.05, 0.05, 0.05, 0.00, 0.10],
+        [0.05, 0.00, 0.05, 0.05, 0.05, 0.05, 0.00, 0.05],
+        [0.00, 0.00, 0.05, 0.05, 0.05, 0.05, 0.00, 0.05],
+        [0.10, 0.05, 0.05, 0.05, 0.05, 0.05, 0.00, 0.10],
+        [0.10, 0.00, 0.05, 0.00, 0.00, 0.00, 0.00, 0.10],
+        [0.10, 0.10, 0.10, 0.05, 0.05, 0.10, 0.10, 0.10]
     ],
     "King": [
         [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],

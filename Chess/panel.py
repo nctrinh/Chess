@@ -37,16 +37,7 @@ class Panel:
             if selected_Piece != None:
                 self.UI.show_Moves(self.screen)
             self.UI.show_Pieces(self.screen)  
-            if self.game_Board.has_valid_move(self.turn):         
-                self.state = 'Playing'
-            elif not self.game_Board.check_Checkmate_Now(self.turn):
-                self.state = 'Draw'               
-                print("Draw")
-                break
-            else:
-                self.state = 'End'
-                print(f'{self.turn} lose')
-                break 
+            self.game_Board.check_State(self, self.turn)
             if self.state == 'Playing':                   
                 for event in pygame.event.get():                   
                     # Click
@@ -70,7 +61,6 @@ class Panel:
                                 initial_move, final_move = move[0], move[1]              
                                 if row_idx == final_move.row_idx and col_idx == final_move.col_idx:
                                     self.game_Board.move_Piece(selected_Piece, move)
-                                    print(self.game_Board.evaluate())
                                     self.turn = 'White' if self.turn == 'Black' else 'Black'
                                     selected_Piece = None
                                     possible_Moves = []                                    
