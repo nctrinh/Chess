@@ -5,10 +5,16 @@ class Book:
         self.head = Node()
         self._create_Tree()
     def find_Move(self, moves, weighted = True):
+        print(moves)
+        if moves[0] == None and len(moves) == 1:
+            print(len(moves))           
+            return self.head.choose_child(weighted).move
+        print(len(moves))
         for i, move in enumerate(moves):
             if i == 0: 
                 node = self.head
-            for child in node.children:
+                print("set head")
+            for child in node.children:                   
                 if move[0].row_idx == child.move[0].row_idx and move[0].col_idx == child.move[0].col_idx and move[1].row_idx == child.move[1].row_idx and move[1].col_idx == child.move[1].col_idx:
                     if len(moves)-1 == i:
                         move = child.choose_child(weighted)
@@ -18,47 +24,154 @@ class Book:
     def _create_Tree(self):
         # 1
         self.head.add_Children(
-            Node((Square(6, 4), Square(4, 4)), 1000),
-            Node((Square(6, 3), Square(4, 3)), 1000),
-            Node((Square(7, 6), Square(5, 5)), 1000),
-            Node((Square(6, 2), Square(4, 2)), 1000),
-            Node((Square(6, 4), Square(5, 4)), 1000),
-            Node((Square(6, 6), Square(5, 6)), 1000),
-            Node((Square(6, 1), Square(5, 1)), 1000),
-            Node((Square(6, 5), Square(4, 5)), 1000),            
-            Node((Square(6, 3), Square(5, 3)), 1000),
-            Node((Square(7, 1), Square(5, 2)), 1000),
-            Node((Square(6, 1), Square(4, 1)), 1000),
-            Node((Square(6, 2), Square(5, 2)), 1000),
+            Node((Square(6, 4), Square(4, 4)), 3222121), # e4
+            Node((Square(6, 3), Square(4, 3)), 1390000), # d4
+            Node((Square(7, 6), Square(5, 5)), 190800), # nf3
+            Node((Square(6, 2), Square(4, 2)), 184300), # c4
+            Node((Square(6, 4), Square(5, 4)), 112500), # e3
+            Node((Square(6, 6), Square(5, 6)), 91000), # g3
+            Node((Square(6, 1), Square(5, 1)), 84000), # b3
+            Node((Square(6, 5), Square(4, 5)), 51000), # f4     
+            Node((Square(6, 3), Square(5, 3)), 47000), # d3
+            Node((Square(7, 1), Square(5, 2)), 30000), # nc3
+            Node((Square(6, 1), Square(4, 1)), 23000), # b4
+            Node((Square(6, 2), Square(5, 2)), 16000), # c3
         )
-        for i in range(12):
-            self.head.children[i].add_Children(
-                Node((Square(1, 4), Square(3, 4)), 1000),  # 1... e5 (King's Pawn Game)
-                Node((Square(1, 2), Square(3, 2)), 1000),  # 1... c5 (Sicilian Defense)
-                Node((Square(1, 3), Square(3, 3)), 1000),  # 1... d5 (Scandinavian Defense)
-                Node((Square(1, 4), Square(2, 4)), 1000),  # 1... e6 (French Defense)
-                Node((Square(1, 2), Square(2, 2)), 1000),  # 1... c6 (Caro-Kann Defense)
-                Node((Square(1, 3), Square(2, 3)), 1000),  # 1... d6 (Pirc Defense)
-                Node((Square(1, 6), Square(2, 6)), 1000),  # 1... g6 (Modern Defense)
-                Node((Square(1, 1), Square(2, 1)), 1000),  # 1... b6 (Owen Defense)
-                Node((Square(0, 6), Square(2, 5)), 1000),  # 1... Nf6 (Alekhine Defense)
-                Node((Square(0, 1), Square(2, 2)), 1000),  # 1... Bb6 (Biến thể)
-                Node((Square(1, 0), Square(2, 0)), 1000),  # 1... a6 (St. George Defense)
-                Node((Square(1, 5), Square(3, 5)), 1000),  # 1... f5 (Duras Gambit)
-            )
-        # self.head.children[0].children[0].add_Children(
-        #     Node(((7, 6), (5, 5)), 1000),  # 2. Nf3 (King's Knight Opening)
-        #     Node(((7, 5), (4, 2)), 1000),  # 2. Bc4 (Bishop's Opening)
-        #     Node(((7, 6), (5, 4)), 1000),  # 2. Nc3 (Vienna Game)
-        #     Node(((6, 3), (4, 3)), 1000),  # 2. d4 (Center Game)
-        #     Node(((6, 5), (4, 5)), 1000),  # 2. f4 (King's Gambit)
-        #     Node(((6, 2), (4, 2)), 1000),  # 2. c3 (MacLeod Attack)
-        #     Node(((6, 2), (4, 4)), 1000),  # 2. c4 (English Opening)
-        #     Node(((7, 3), (5, 7)), 1000),  # 2. Qh5 (Wayward Queen Attack)
-        #     Node(((7, 3), (5, 5)), 1000),  # 2. Qf3 (Napoleon Attack)
-        #     Node(((6, 3), (5, 3)), 1000),  # 2. d3 (Leonardis Variation)
-        #     Node(((7, 5), (5, 5)), 1000),  # 2. f3 (King's Head Opening)
-        #     Node(((7, 5), (5, 6)), 1000),  # 2. g3 (Grob's Attack)
-        # )
+        #2
+        self.head.children[0].add_Children(
+            Node((Square(1, 4), Square(3, 4)), 1289500), # e5
+            Node((Square(1, 2), Square(3, 2)), 600000), # c5
+            Node((Square(1, 3), Square(3, 3)), 333000), # d5
+            Node((Square(1, 4), Square(2, 4)), 331000), # e6
+        )
+        self.head.children[1].add_Children(
+            Node((Square(1, 3), Square(3, 3)), 573000), # d5
+            Node((Square(0, 7), Square(2, 6)), 273000), # nf6
+            Node((Square(1, 4), Square(2, 4)), 138000), # e6
+            Node((Square(1, 4), Square(3, 4)), 82000), # e5           
+        )
+        self.head.children[2].add_Children(
+            Node((Square(1, 3), Square(3, 3)), 61000), # d5
+            Node((Square(0, 7), Square(2, 6)), 29000), # nf6
+            Node((Square(1, 2), Square(3, 2)), 18000), # c5
+            Node((Square(1, 4), Square(2, 4)), 17000), # e6
+        )
+        self.head.children[3].add_Children(
+            Node((Square(1, 4), Square(3, 4)), 54000), # e5 
+            Node((Square(0, 7), Square(2, 6)), 30000), # nf6
+            Node((Square(1, 2), Square(3, 2)), 21000), # c5
+            Node((Square(1, 4), Square(2, 4)), 20000), # e6
+        )
+        self.head.children[4].add_Children(
+            Node((Square(1, 4), Square(3, 4)), 40000), # e5 
+            Node((Square(1, 3), Square(3, 3)), 22000), # d5
+            Node((Square(1, 2), Square(3, 2)), 11000), # c5
+            Node((Square(1, 4), Square(2, 4)), 10000), # e6
+        )
+        # 3
+        self.head.children[0].children[0].add_Children(
+            Node((Square(7, 6), Square(5, 5)), 794000), # nf3
+            Node((Square(7, 5), Square(4, 2)), 132000), # bc4
+        )
+        self.head.children[0].children[1].add_Children(
+            Node((Square(7, 6), Square(5, 5)), 319000), # nf3
+            Node((Square(7, 1), Square(5, 2)), 58000), # nc3
+        )
+        self.head.children[1].children[0].add_Children(
+            Node((Square(6, 2), Square(4, 2)), 226000), # c4
+            Node((Square(7, 2), Square(4, 5)), 102000), # bf4
+        )
+        self.head.children[1].children[1].add_Children(
+            Node((Square(6, 2), Square(4, 2)), 115000), # c4
+            Node((Square(7, 6), Square(5, 5)), 52000), # nf3
+        )
+        self.head.children[2].children[0].add_Children(
+            Node((Square(6, 3), Square(4, 3)), 20000), # d4
+            Node((Square(6, 6), Square(5, 6)), 14000), # g3
+        )
+        self.head.children[2].children[1].add_Children(
+            Node((Square(6, 6), Square(5, 6)), 9000), # g3
+            Node((Square(6, 3), Square(4, 3)), 8000), # d4
+        )
+        self.head.children[3].children[0].add_Children(
+            Node((Square(7, 1), Square(5, 2)), 32000), # nc3
+            Node((Square(6, 6), Square(5, 6)), 7000), # g3
+        )
+        self.head.children[3].children[1].add_Children(
+            Node((Square(7, 1), Square(5, 2)), 18000), # nc3
+            Node((Square(6, 6), Square(5, 6)), 4000), # g3
+        )
+        self.head.children[4].children[0].add_Children(
+            Node((Square(6, 3), Square(4, 3)), 8000), # d4
+            Node((Square(6, 1), Square(5, 1)), 4000), # b3
+        )
+        self.head.children[4].children[1].add_Children(
+            Node((Square(6, 3), Square(4, 3)), 6000), # d4
+            Node((Square(6, 1), Square(5, 1)), 2000), # b3
+        )
+        #4
+        self.head.children[0].children[0].children[0].add_Children(
+            Node((Square(0, 1), Square(2, 2)), 500000), # nc6
+        )
+        self.head.children[0].children[0].children[1].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6
+        )
+        self.head.children[0].children[1].children[0].add_Children(
+            Node((Square(0, 1), Square(2, 2)), 133000), # nc6
+        )
+        self.head.children[0].children[1].children[1].add_Children(
+            Node((Square(0, 1), Square(2, 2)), 25000), # nc6
+        )
+
+        self.head.children[1].children[0].children[0].add_Children(
+            Node((Square(1, 4), Square(2, 4)), 10000), # e6
+        )
+        self.head.children[1].children[0].children[1].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6    
+        )
+        self.head.children[1].children[1].children[0].add_Children(
+            Node((Square(1, 4), Square(2, 4)), 10000), # e6
+        )
+        self.head.children[1].children[1].children[1].add_Children(
+            Node((Square(1, 6), Square(2, 6)), 6000), # g6
+        )
+
+        self.head.children[2].children[0].children[0].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6
+        )
+        self.head.children[2].children[0].children[1].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6
+        )
+        self.head.children[2].children[1].children[0].add_Children(
+            Node((Square(1, 6), Square(2, 6)), 6000), # g6
+        )
+        self.head.children[2].children[1].children[1].add_Children(
+            Node((Square(1, 6), Square(2, 6)), 6000), # g6
+        )
+
+        self.head.children[3].children[0].children[0].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6
+        )
+        self.head.children[3].children[0].children[1].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6
+        )
+        self.head.children[3].children[1].children[0].add_Children(
+            Node((Square(1, 6), Square(2, 6)), 6000), # g6
+        )
+        self.head.children[3].children[1].children[1].add_Children(
+            Node((Square(1, 6), Square(2, 6)), 6000), # g6
+        )
         
+        self.head.children[4].children[0].children[0].add_Children(
+            Node((Square(3, 4), Square(4, 3)), 6000), # exd4
+        )
+        self.head.children[4].children[0].children[1].add_Children(
+            Node((Square(1, 3), Square(3, 3)), 22000), # d5
+        )
+        self.head.children[4].children[1].children[0].add_Children(
+            Node((Square(0, 6), Square(2, 5)), 43000), # nf6
+        )
+        self.head.children[4].children[1].children[1].add_Children(
+            Node((Square(1, 4), Square(3, 4)), 54000), # e5 
+        )
         

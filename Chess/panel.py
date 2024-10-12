@@ -20,7 +20,7 @@ class Panel:
         self.game_Board = Board()
         self.click = Click()
         self.UI = UI(self.game_Board, self.click)
-        self.AI = AI(3, "Black")
+        self.AI = AI(2, "Black")
         self.game_Mode = 'PvA'
         self.choose_Piece = False
         self.choosen_Piece = None
@@ -57,29 +57,59 @@ class Panel:
                         else:
                             self.click.update_idx(chosen_Piece, clicked_Row, clicked_Col)
                             row_idx, col_idx = self.click.row_idx, self.click.col_idx  
-                            for move in possible_Moves:
-                                initial_move, final_move = move[0], move[1]              
-                                if row_idx == final_move.row_idx and col_idx == final_move.col_idx:
-                                    self.game_Board.move_Piece(selected_Piece, move)
-                                    self.turn = 'White' if self.turn == 'Black' else 'Black'
-                                    selected_Piece = None
-                                    possible_Moves = []                                    
-                                    if self.game_Mode == "PvA":
-                                        self.UI.show_Board(self.screen)           
-                                        self.UI.show_Pieces(self.screen)   
-                                        pygame.display.update()                             
-                                        move = self.AI.eval(self.game_Board)
-                                        initail_move, final_move = move[0], move[1]
-                                        piece = self.game_Board.board[initail_move.row_idx][initail_move.col_idx].piece
-                                        self.game_Board.move_Piece(piece, move)
-                                        print(self.game_Board.evaluate())
+                            if self.game_Board.board[row_idx][col_idx].piece != selected_Piece and self.game_Board.board[row_idx][col_idx].has_Team(self.turn):
+                                self.game_Board.calc_moves(chosen_Piece, clicked_Row, clicked_Col, True)                        
+                                possible_Moves = chosen_Piece.moves           
+                                self.click.update_idx(chosen_Piece, clicked_Row, clicked_Col)
+                                selected_Piece = chosen_Piece
+                            else:
+                                for move in possible_Moves:
+                                    initial_move, final_move = move[0], move[1]              
+                                    if row_idx == final_move.row_idx and col_idx == final_move.col_idx:
+                                        self.game_Board.move_Piece(selected_Piece, move)
                                         self.turn = 'White' if self.turn == 'Black' else 'Black'
-                                    break 
-                            selected_Piece = None
-                            
-                            
-                    elif event.type == pygame.MOUSEBUTTONUP:
-                        pass
+                                        selected_Piece = None
+                                        possible_Moves = []                                    
+                                        if self.game_Mode == "PvA":
+                                            self.UI.show_Board(self.screen)           
+                                            self.UI.show_Pieces(self.screen)   
+                                            pygame.display.update()                             
+                                            move = self.AI.eval(self.game_Board, self.turn)
+                                            if move:
+                                                initail_move, final_move = move[0], move[1]
+                                                piece = self.game_Board.board[initail_move.row_idx][initail_move.col_idx].piece
+                                                self.game_Board.move_Piece(piece, move)
+                                                self.turn = 'White' if self.turn == 'Black' else 'Black'
+                                        break 
+                                selected_Piece = None   
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:   
+                           if self.game_Mode == "PvA":
+                                self.UI.show_Board(self.screen)           
+                                self.UI.show_Pieces(self.screen)   
+                                pygame.display.update()                             
+                                move = self.AI.eval(self.game_Board, self.turn)
+                                if move:
+                                    initail_move, final_move = move[0], move[1]
+                                    piece = self.game_Board.board[initail_move.row_idx][initail_move.col_idx].piece
+                                    self.game_Board.move_Piece(piece, move)
+                                    self.turn = 'White' if self.turn == 'Black' else 'Black'                      
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+            else:
+                self.UI.show_End(self.screen, self.state, self.turn)
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_r:
+                            self.game_Board = Board()
+                            self.click = Click()
+                            self.UI = UI(self.game_Board, self.click)
+                            self.choose_Piece = False
+                            self.choosen_Piece = None
+                            self.turn = "White"
+                            self.state = 'Playing'
+                            print("reset")
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()

@@ -61,7 +61,6 @@ class Board:
                 self.board[final_move_row_idx][final_move_col_idx].piece = piece 
                 self.board[final_move_row_idx][final_move_col_idx].piece.is_Moved = True
                 self.board[final_move_row_idx][final_move_col_idx].piece.moves = []
-
     def evaluate(self):
         value = 0
         for row in range(ROWS):
@@ -72,9 +71,11 @@ class Board:
                     else:
                         value -= piece_square_tables[self.board[row][col].piece.name][7 - row][col]
                     value += self.board[row][col].piece.value
-                    if self.board[row][col].piece.name != 'queen': value += 0.01 * len(self.board[row][col].piece.moves)
-                    else: value += 0.003 * len(self.board[row][col].piece.moves)
-                    value += self.get_threatened_pieces(self.board[row][col].piece, row, col)
+                    if self.board[row][col].piece.name != 'Queen': 
+                        value += 0.01 * len(self.board[row][col].piece.moves)
+                    else: 
+                        value += 0.003 * len(self.board[row][col].piece.moves)
+                    value += self.get_threatened_pieces(self.board[row][col].piece)
         value = round(value, 5)          
         return value
 
@@ -104,12 +105,12 @@ class Board:
                             return True
         return False
     
-    def get_threatened_pieces(self, piece, row, col):
+    def get_threatened_pieces(self, piece):
         value = 0
         for move in piece.moves:
             if move[1].has_Enemy(piece.color):
-                if move[1].piece.name == 'king':
-                        eval += move[1].piece.value / 10500
+                if move[1].piece.name == 'King':
+                        value += move[1].piece.value / 10500
                 else:
                     value += move[1].piece.value / 45
         return value
@@ -139,11 +140,9 @@ class Board:
         if self.has_valid_move(turn):         
             panel.state = 'Playing'
         elif not self.check_Checkmate_Now(turn):
-            panel.state = 'Draw'               
-            print("Draw")
+            panel.state = 'Draw'
         else:
             panel.state = 'End'
-            print(f'{turn} lose')
     def calc_moves(self, piece, row : int, col : int, bool = True):
         piece.moves = []
         def can_castling(king, rook, row, king_col, rook_col):

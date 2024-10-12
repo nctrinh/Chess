@@ -74,7 +74,7 @@ class AI:
                 best_move = moves[idx]
             return min_score, best_move
     
-    def eval(self, board):
+    def eval(self, board, turn):
         self.explored = 0 
         last_move = board.last_Move
         self.moves.append(last_move)
@@ -87,13 +87,15 @@ class AI:
         if self.engine == 'Minimax':
             print('\nFinding best move...')
                             
-            score, move = self.minimax(board, self.depth, "Black", -math.inf, math.inf)
+            score, move = self.minimax(board, self.depth, turn, -math.inf, math.inf)
                 
             print('\n- Initial eval:', board.evaluate())
             print('- Final eval:', score)
             print('- Boards explored', self.explored)
-            if score >= 5000: print('* White MATE!')
-            if score <= -5000: print('* Black MATE!')
+            if score >= 5000: 
+                print('* White MATE!')
+            if score <= -5000: 
+                print('* Black MATE!')
                 
         self.moves.append(move)
 

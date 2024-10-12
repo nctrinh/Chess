@@ -5,6 +5,8 @@ from board import *
 
 class UI:
     def __init__(self, game_Board : Board, click : Click):
+        self.font_large = pygame.font.Font(None, 74)
+        self.font_small = pygame.font.Font(None, 36)
         self.game_Board = game_Board
         self.click = click
 
@@ -44,4 +46,17 @@ class UI:
             
                 rect = (move_col_idx * SQSIZE, move_row_idx * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
-            
+    def show_End(self, surface : pygame.Surface, state, turn):
+        restart_text = self.font_small.render('Press R to restart', True, (255, 255, 255))
+        restart_text_rect = restart_text.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 30))
+        if state == "End":
+            win_Turn = 'White' if turn == 'Black' else 'Black'
+            win_text = self.font_large.render(f'{win_Turn} Win', True, (255, 255, 255))           
+            win_text_rect = win_text.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))
+            surface.blit(win_text, win_text_rect)
+        elif state == "Draw":
+            draw_text = self.font_large.render('Draw', True, (255, 255, 255))           
+            draw_text_rect = draw_text.get_rect(center=(WIDTH / 2, HEIGHT / 2 - 50))
+            surface.blit(draw_text, draw_text_rect)
+        surface.blit(restart_text, restart_text_rect)
+        
