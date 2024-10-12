@@ -38,7 +38,7 @@ class AI:
             for move in moves:
                 self.explored += 1
                 temp_board = copy.deepcopy(game_Board)
-                piece = temp_board.board[move[0].row_idx][move[0].col_idx].piece
+                piece = game_Board.board[move[0].row_idx][move[0].col_idx].piece
                 temp_board.move_Piece(piece, move)
                 piece.is_Moved = False
                 score = self.minimax(temp_board, depth-1, "Black", alpha, beta)[0]
@@ -46,7 +46,8 @@ class AI:
                     max_score = score
                     best_move = move
                 alpha = max(alpha, max_score)
-                if beta <= alpha: break
+                if beta <= alpha:
+                    break
             if not best_move:
                 idx = random.randrange(0, len(moves))
                 best_move = moves[idx]
@@ -58,7 +59,7 @@ class AI:
             for move in moves:
                 self.explored += 1
                 temp_board = copy.deepcopy(game_Board)
-                piece = temp_board.board[move[0].row_idx][move[0].col_idx].piece
+                piece = game_Board.board[move[0].row_idx][move[0].col_idx].piece
                 temp_board.move_Piece(piece, move)
                 piece.is_Moved = False
                 score = self.minimax(temp_board, depth-1, "White", alpha, beta)[0]
@@ -66,7 +67,8 @@ class AI:
                     min_score = score
                     best_move = move
                 beta = min(beta, min_score)
-                if beta <= alpha: break            
+                if beta <= alpha:
+                    break            
             if not best_move:
                 idx = random.randrange(0, len(moves))
                 best_move = moves[idx]
