@@ -5,15 +5,13 @@ class Book:
         self.head = Node()
         self._create_Tree()
     def find_Move(self, moves, weighted = True):
-        print(moves)
+        
         if moves[0] == None and len(moves) == 1:
-            print(len(moves))           
-            return self.head.choose_child(weighted).move
-        print(len(moves))
+            moves[0] = self.head.choose_child(weighted).move 
+            return moves[0]
         for i, move in enumerate(moves):
             if i == 0: 
                 node = self.head
-                print("set head")
             for child in node.children:                   
                 if move[0].row_idx == child.move[0].row_idx and move[0].col_idx == child.move[0].col_idx and move[1].row_idx == child.move[1].row_idx and move[1].col_idx == child.move[1].col_idx:
                     if len(moves)-1 == i:
@@ -46,19 +44,19 @@ class Book:
         )
         self.head.children[1].add_Children(
             Node((Square(1, 3), Square(3, 3)), 573000), # d5
-            Node((Square(0, 7), Square(2, 6)), 273000), # nf6
+            Node((Square(0, 6), Square(2, 5)), 273000), # nf6
             Node((Square(1, 4), Square(2, 4)), 138000), # e6
             Node((Square(1, 4), Square(3, 4)), 82000), # e5           
         )
         self.head.children[2].add_Children(
             Node((Square(1, 3), Square(3, 3)), 61000), # d5
-            Node((Square(0, 7), Square(2, 6)), 29000), # nf6
+            Node((Square(0, 6), Square(2, 5)), 29000), # nf6
             Node((Square(1, 2), Square(3, 2)), 18000), # c5
             Node((Square(1, 4), Square(2, 4)), 17000), # e6
         )
         self.head.children[3].add_Children(
             Node((Square(1, 4), Square(3, 4)), 54000), # e5 
-            Node((Square(0, 7), Square(2, 6)), 30000), # nf6
+            Node((Square(0, 6), Square(2, 5)), 30000), # nf6
             Node((Square(1, 2), Square(3, 2)), 21000), # c5
             Node((Square(1, 4), Square(2, 4)), 20000), # e6
         )

@@ -20,7 +20,7 @@ class Panel:
         self.game_Board = Board()
         self.click = Click()
         self.UI = UI(self.game_Board, self.click)
-        self.AI = AI(3, "Black")
+        self.AI = AI(3)
         self.game_Mode = 'PvA'
         self.choose_Piece = False
         self.choosen_Piece = None
@@ -71,8 +71,9 @@ class Panel:
                                         selected_Piece = None
                                         possible_Moves = []                                    
                                         if self.game_Mode == "PvA":
-                                            self.UI.show_Board(self.screen)           
-                                            self.UI.show_Pieces(self.screen)   
+                                            self.UI.show_Board(self.screen)   
+                                            self.UI.show_Last_Move(self.screen)        
+                                            self.UI.show_Pieces(self.screen)                                              
                                             pygame.display.update()                             
                                             move = self.AI.eval(self.game_Board, self.turn)
                                             if move:
@@ -85,10 +86,12 @@ class Panel:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:   
                            if self.game_Mode == "PvA":
-                                self.UI.show_Board(self.screen)           
-                                self.UI.show_Pieces(self.screen)   
+                                self.UI.show_Board(self.screen)
+                                self.UI.show_Last_Move(self.screen)           
+                                self.UI.show_Pieces(self.screen)                              
                                 pygame.display.update()                             
                                 move = self.AI.eval(self.game_Board, self.turn)
+                                print(self.turn)
                                 if move:
                                     initail_move, final_move = move[0], move[1]
                                     piece = self.game_Board.board[initail_move.row_idx][initail_move.col_idx].piece

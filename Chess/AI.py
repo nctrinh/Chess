@@ -5,10 +5,9 @@ from book import Book
 from constaints import *
 
 class AI:
-    def __init__(self, depth, color, engine = 'Book'):
+    def __init__(self, depth, engine = 'Book'):
         self.engine = engine
         self.depth = depth
-        self.color = color
         self.book = Book()
         self.moves = []
         self.explored_nodes = 0
@@ -84,6 +83,8 @@ class AI:
             if move is None:
                 print("\n- Not in book")
                 self.engine = 'Minimax'
+        else:
+            self.engine = 'Minimax'
         if self.engine == 'Minimax':
             print('\nFinding best move...')
                             

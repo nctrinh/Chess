@@ -14,9 +14,9 @@ class UI:
         for row in range(ROWS):
             for col in range(COLS):
                 if (col + row) % 2 == 0:
-                    color_Code = '#806640'
+                    color_Code = '#E9DBBD'
                 else:
-                    color_Code = '#332313'
+                    color_Code = '#A88B6C'
                 pygame.draw.rect(surface, color_Code, (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE))
     
     def show_Pieces(self, surface : pygame.Surface):
@@ -33,16 +33,19 @@ class UI:
         if self.click.piece:
             piece = self.click.piece
             for move in piece.moves:
-                color = '#C84646' if (move[1].row_idx + move[1].col_idx) % 2 == 0 else '#C86464'
-                rect = (move[1].col_idx * SQSIZE, move[1].row_idx * SQSIZE, SQSIZE, SQSIZE)
+                color = '#8C9772' if (move[1].row_idx + move[1].col_idx) % 2 == 0 else '#6C6F4B'
+                rect = (move[0].col_idx * SQSIZE, move[0].row_idx * SQSIZE, SQSIZE, SQSIZE)
+                center = (move[1].col_idx * SQSIZE + SQSIZE / 2, move[1].row_idx * SQSIZE + SQSIZE / 2)
+                radius = SQSIZE / 7
                 pygame.draw.rect(surface, color, rect)
+                pygame.draw.circle(surface, color, center, radius)
 
     def show_Last_Move(self, surface : pygame.Surface):
         last_Move = self.game_Board.last_Move
         if last_Move:
             for move in last_Move:
                 move_col_idx, move_row_idx= move.col_idx, move.row_idx
-                color = '#006600' if (move_col_idx + move_row_idx) % 2 == 0 else '#007700'
+                color = '#B5B07A' if (move_col_idx + move_row_idx) % 2 == 0 else '#A9A260'
             
                 rect = (move_col_idx * SQSIZE, move_row_idx * SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface, color, rect)
