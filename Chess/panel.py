@@ -20,7 +20,7 @@ class Panel:
         self.game_Board = Board()
         self.click = Click()
         self.UI = UI(self.game_Board, self.click)
-        self.AI = AI(2, "Black")
+        self.AI = AI(3, "Black")
         self.game_Mode = 'PvA'
         self.choose_Piece = False
         self.choosen_Piece = None
