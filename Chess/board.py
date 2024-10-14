@@ -71,10 +71,11 @@ class Board:
                     else:
                         value -= piece_square_tables[self.board[row][col].piece.name][7 - row][col]
                     value += self.board[row][col].piece.value
+                    sign = 1 if self.board[row][col].piece.color == "White" else -1
                     if self.board[row][col].piece.name != 'Queen': 
-                        value += 0.01 * len(self.board[row][col].piece.moves)
+                        value += 0.01 * len(self.board[row][col].piece.moves) * sign
                     else: 
-                        value += 0.003 * len(self.board[row][col].piece.moves)
+                        value += 0.003 * len(self.board[row][col].piece.moves) * sign
                     value += self.get_threatened_pieces(self.board[row][col].piece)
         value = round(value, 5)          
         return value

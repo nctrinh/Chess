@@ -38,7 +38,7 @@ class Panel:
                 self.UI.show_Moves(self.screen)
             self.UI.show_Pieces(self.screen)  
             self.game_Board.check_State(self, self.turn)
-            if self.state == 'Playing':                   
+            if self.state == 'Playing':       
                 for event in pygame.event.get():                   
                     # Click
                     if event.type == pygame.MOUSEBUTTONDOWN:
