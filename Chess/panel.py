@@ -34,9 +34,10 @@ class Panel:
             # Draw board
             self.UI.show_Board(self.screen)           
             self.UI.show_Last_Move(self.screen)
+            self.UI.show_current_Piece(self.screen)
+            self.UI.show_Pieces(self.screen)
             if selected_Piece != None:
-                self.UI.show_Moves(self.screen)
-            self.UI.show_Pieces(self.screen)  
+                self.UI.show_Moves(self.screen)             
             self.game_Board.check_State(self, self.turn)
             if self.state == 'Playing':       
                 for event in pygame.event.get():                   
@@ -71,9 +72,12 @@ class Panel:
                                         selected_Piece = None
                                         possible_Moves = []                                    
                                         if self.game_Mode == "PvA":
-                                            self.UI.show_Board(self.screen)   
-                                            self.UI.show_Last_Move(self.screen)        
-                                            self.UI.show_Pieces(self.screen)                                              
+                                            self.UI.show_Board(self.screen)           
+                                            self.UI.show_Last_Move(self.screen)
+                                            self.UI.show_current_Piece(self.screen)
+                                            self.UI.show_Pieces(self.screen)
+                                            if selected_Piece != None:
+                                                self.UI.show_Moves(self.screen)                                          
                                             pygame.display.update()                             
                                             move = self.AI.eval(self.game_Board, self.turn)
                                             if move:
@@ -86,9 +90,12 @@ class Panel:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:   
                            if self.game_Mode == "PvA":
-                                self.UI.show_Board(self.screen)
-                                self.UI.show_Last_Move(self.screen)           
-                                self.UI.show_Pieces(self.screen)                              
+                                self.UI.show_Board(self.screen)           
+                                self.UI.show_Last_Move(self.screen)
+                                self.UI.show_current_Piece(self.screen)
+                                self.UI.show_Pieces(self.screen)
+                                if selected_Piece != None:
+                                    self.UI.show_Moves(self.screen)                           
                                 pygame.display.update()                             
                                 move = self.AI.eval(self.game_Board, self.turn)
                                 print(self.turn)

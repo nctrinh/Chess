@@ -34,12 +34,16 @@ class UI:
             piece = self.click.piece
             for move in piece.moves:
                 color = '#8C9772' if (move[1].row_idx + move[1].col_idx) % 2 == 0 else '#6C6F4B'
-                rect = (move[0].col_idx * SQSIZE, move[0].row_idx * SQSIZE, SQSIZE, SQSIZE)
                 center = (move[1].col_idx * SQSIZE + SQSIZE / 2, move[1].row_idx * SQSIZE + SQSIZE / 2)
                 radius = SQSIZE / 7
-                pygame.draw.rect(surface, color, rect)
                 pygame.draw.circle(surface, color, center, radius)
-
+    def show_current_Piece(self, surface : pygame.Surface):
+        if self.click.piece:
+            piece = self.click.piece
+            for move in piece.moves:
+                color = '#8C9772' if (move[1].row_idx + move[1].col_idx) % 2 == 0 else '#6C6F4B'
+                rect = (move[0].col_idx * SQSIZE, move[0].row_idx * SQSIZE, SQSIZE, SQSIZE)
+                pygame.draw.rect(surface, color, rect)
     def show_Last_Move(self, surface : pygame.Surface):
         last_Move = self.game_Board.last_Move
         if last_Move:

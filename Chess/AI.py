@@ -26,6 +26,7 @@ class AI:
         if depth == 0:
             return game_Board.evaluate(), None     
         moves = self.get_moves(game_Board, turn)  
+        best_move = None
         if not moves:
             if turn == "White":
                 return -math.inf, None

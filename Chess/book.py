@@ -4,8 +4,7 @@ class Book:
     def __init__(self):
         self.head = Node()
         self._create_Tree()
-    def find_Move(self, moves, weighted = True):
-        
+    def find_Move(self, moves, weighted = True):       
         if moves[0] == None and len(moves) == 1:
             moves[0] = self.head.choose_child(weighted).move 
             return moves[0]
@@ -16,7 +15,8 @@ class Book:
                 if move[0].row_idx == child.move[0].row_idx and move[0].col_idx == child.move[0].col_idx and move[1].row_idx == child.move[1].row_idx and move[1].col_idx == child.move[1].col_idx:
                     if len(moves)-1 == i:
                         move = child.choose_child(weighted)
-                        return move.move
+                        if move:
+                            return move.move
                     else:
                         node = child
     def _create_Tree(self):
@@ -27,13 +27,6 @@ class Book:
             Node((Square(7, 6), Square(5, 5)), 190800), # nf3
             Node((Square(6, 2), Square(4, 2)), 184300), # c4
             Node((Square(6, 4), Square(5, 4)), 112500), # e3
-            Node((Square(6, 6), Square(5, 6)), 91000), # g3
-            Node((Square(6, 1), Square(5, 1)), 84000), # b3
-            Node((Square(6, 5), Square(4, 5)), 51000), # f4     
-            Node((Square(6, 3), Square(5, 3)), 47000), # d3
-            Node((Square(7, 1), Square(5, 2)), 30000), # nc3
-            Node((Square(6, 1), Square(4, 1)), 23000), # b4
-            Node((Square(6, 2), Square(5, 2)), 16000), # c3
         )
         #2
         self.head.children[0].add_Children(
